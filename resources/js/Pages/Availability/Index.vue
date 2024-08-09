@@ -1,9 +1,10 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import {Head} from '@inertiajs/vue3';
+import AvailabilityTable from "@/Pages/Availability/Partial/AvailabilityTable.vue";
 
 defineProps({
-    users: Object,
+    availability: Object,
 });
 </script>
 
@@ -17,13 +18,10 @@ defineProps({
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <StudentListTable
-                        :users="users"
-                        class="max-w-xl"
+                    <AvailabilityTable
+                        :availability="availability"
+                        class="max-w-full"
                     />
-                </div>
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <StudentCreate class="max-w-xl"/>
                 </div>
             </div>
         </div>

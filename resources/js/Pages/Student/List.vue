@@ -21,11 +21,11 @@ defineProps({
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                     <StudentListTable
                         :users="users"
-                        class="max-w-xl"
+                        class="max-w-full"
                     />
                 </div>
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <StudentCreate class="max-w-xl"/>
+                    <StudentCreate class="max-w-full"/>
                 </div>
             </div>
         </div>

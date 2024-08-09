@@ -7,7 +7,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="w-full justify-center flex my-4" v-if="obj.total > obj.per_page">
+    <div class="w-full justify-end flex my-4" v-if="obj.total > obj.per_page">
         <nav aria-label="Page navigation example mt-2">
             <ul class="inline-flex -space-x-px text-sm">
                 <template v-for="link in obj.links">
