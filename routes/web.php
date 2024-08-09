@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\AvailabilityController;
+use App\Http\Controllers\ScheduleController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -41,9 +42,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/student', [StudentController::class, 'list'])->name('student');
     Route::post('/student', [StudentController::class, 'store'])->name('student.store');
 
-    // Student
+    // Availability
     Route::get('/availability', [AvailabilityController::class, 'get'])->name('availability');
     Route::post('/availability', [AvailabilityController::class, 'update'])->name('availability.update');
+
+    // Schedules
+    Route::get('/schedules', [ScheduleController::class, 'list'])->name('schedules');
+    Route::post('/schedule', [ScheduleController::class, 'store'])->name('schedule.store');
 });
 
 require __DIR__ . '/auth.php';

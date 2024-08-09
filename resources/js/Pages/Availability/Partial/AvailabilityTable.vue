@@ -20,10 +20,7 @@ const update_availability = (e) => {
     weekDays[e.target.name] = e.target.checked
     const form = useForm(weekDays);
 
-    form.post(route('availability.update'), {
-        onFinish: () => form.reset(),
-        onSuccess: () => form.reset()
-    });
+    form.post(route('availability.update'));
 }
 </script>
 
