@@ -12,7 +12,7 @@ console.log(props);
 <template>
     <section class="max-w-full">
         <header class="my-4">
-            <h2 class="text-lg font-medium text-gray-900">Reports</h2>
+            <h2 class="text-lg font-medium text-gray-900">All Reports</h2>
         </header>
 
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg ">
@@ -23,10 +23,13 @@ console.log(props);
                         Subject
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Report Start Time
+                        Report Start Date
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Report End Time
+                        Report End Date
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Improvement Targets
                     </th>
                 </tr>
                 </thead>
@@ -42,6 +45,9 @@ console.log(props);
                     </td>
                     <td class="px-6 py-4">
                         {{ report.end_date }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ report.improvement_target }}
                     </td>
                 </tr>
                 </tbody>

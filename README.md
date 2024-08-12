@@ -52,3 +52,11 @@
 - VUE 3 (Included in laravel)
 - php ^8
 - Mysql 8
+
+## Queries:
+
+- **Generate Reports**: We are currently parsing report data from DOCX files and storing it in a database. However, we
+  are
+  encountering issues with locating the dataset required to generate the report for export.
+- **Header Removal**: Due to limitations in the parsing library, it is necessary to remove the header from the DOCX file
+  before importing the data. Please ensure that the header is removed to allow the parsing process to work as expected.
