@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportTemplateController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -51,6 +53,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/schedule', [ScheduleController::class, 'store'])->name('schedule.store');
     Route::get('/schedule/{id}', [ScheduleController::class, 'view'])->name('schedule.view');
     Route::post('/schedule-rating/{id}/{user_id}', [ScheduleController::class, 'rating'])->name('schedule.rating');
+    //report generation
+    Route::get('report', [ReportTemplateController::class, 'list'])->name('reports');
+    Route::get('report/index', [ReportTemplateController::class, 'index'])->name('report.index');
+    Route::post('report/reportform', [ReportTemplateController::class, 'store'])->name('report.store');
+    Route::post('report/uploadReport', [ReportTemplateController::class, 'uploadFile'])->name('report.upload');
+
 });
 
 require __DIR__ . '/auth.php';
