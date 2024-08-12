@@ -12,4 +12,8 @@ class Schedule extends Model {
 
     protected $fillable = ['title', 'start_date_time', 'end_date_time'];
 
+    public function getScheduleMembers() {
+        return $this->hasMany(ScheduleMember::class, 'schedule_id', 'id');
+    }
+
 }

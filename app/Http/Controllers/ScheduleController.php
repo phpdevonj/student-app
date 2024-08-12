@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Schedule;
-use App\Models\ScheduleMember;
 use App\Models\User;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
-use Illuminate\Validation\Rules;
 use Inertia\Response;
+use App\Models\Schedule;
+use Illuminate\Http\Request;
+use App\Http\Helpers\Common;
+use App\Models\ScheduleMember;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\RedirectResponse;
 
 class ScheduleController extends Controller {
 
@@ -31,12 +30,39 @@ class ScheduleController extends Controller {
             'title' => 'required|string|max:255',
             'start_date_time' => 'date|max:255|required',
             'end_date_time' => 'date|max:255|required',
-            'students.*' => 'required|exists:users,id',
+            'students' => 'required|array|exists:users,id',
         ]);
 
-        // TODO: Check max difference of 15 min only
-        // TODO: Check students.* should not be already in schedules
-//        then return value error
+
+        $startDateTime = new \DateTime($request->start_date_time);
+        $endDateTime = new \DateTime($request->end_date_time);
+        $isValidDate = Common::isWithin15Minutes($startDateTime, $endDateTime);
+        // Check max difference of 15 min only
+        if (!$isValidDate) {
+            $request->validate(['end_date_time' => 'max:1|required'], [
+                'end_date_time.max' => 'Date difference must be max 15 min.',
+            ]);
+        }
+
+
+        $isInOtherSchedule = Schedule::whereHas('getScheduleMembers', function ($query) use ($request) {
+            return $query->whereIn('user_id', $request->students);
+        })
+            ->where(function ($query) use ($request, $startDateTime, $endDateTime) {
+                return $query->where(function ($query) use ($request, $startDateTime, $endDateTime) {
+                    return $query->where('start_date_time', '<=', $startDateTime)->where('end_date_time', '>=', $startDateTime);
+                })->orWhere(function ($query) use ($request, $endDateTime, $startDateTime) {
+                    return $query->where('start_date_time', '<=', $endDateTime)->where('end_date_time', '>=', $endDateTime);
+                });
+            })
+            ->count();
+
+
+        if ($isInOtherSchedule) {
+            $request->validate(['students' => 'array|max:0|required'], [
+                'students.max' => 'Some students are already in another schedule with given time.',
+            ]);
+        }
 
         $status = 'Something went wrong';
         try {

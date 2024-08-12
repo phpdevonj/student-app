@@ -12,4 +12,8 @@ class ScheduleMember extends Model {
 
     protected $fillable = ['schedule_id', 'user_id'];
 
+    public function getSchedule() {
+        return $this->hasOne(Schedule::class, 'id', 'schedule_id');
+    }
+
 }
