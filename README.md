@@ -16,6 +16,14 @@
 - Add current app url to .env file `APP_URL=`
 - Run `npm run dev`
 
+To create admin user please run this query after database migration (Type: 1 -> Admin, Type: 0 ->default(student)):
+```
+INSERT INTO school.users (name, email, email_verified_at, password, remember_token, created_at, updated_at, middle_name,
+                          last_name, dob, type)
+VALUES ('admin', 'admin@gmail.com', null, '$2y$10$XCVcaeQCGpeCJa1W0iU8eOdFIMDSuGCweykQMvSx59VuFwTFfyAP.', null,
+        '2024-08-08 08:47:20', '2024-08-08 09:00:23', 'admin', 'admin', null, 1);
+```
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
