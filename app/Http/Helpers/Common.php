@@ -2,6 +2,10 @@
 
 namespace App\Http\Helpers;
 
+use App\Mail\SendMail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+
 class Common {
     public static function isWithin15Minutes(\DateTime $datetime1, \DateTime $datetime2) {
         // Calculate the difference between the two datetimes
@@ -13,4 +17,25 @@ class Common {
         }
         return true;
     }
+
+
+    /**
+     * @param $to
+     * @param $view
+     * @param $data
+     * @return bool
+     */
+    public static function sendMail($to, $view, $data) {
+        try {
+            Mail::to($to)->send(new SendMail($view, $data));
+            return true;
+        } catch (\Exception $ex) {
+            if (env('APP_DEBUG')) {
+                Log::error($ex->getMessage());
+            }
+            return false;
+        }
+    }
+
+
 }
