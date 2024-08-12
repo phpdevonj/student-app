@@ -13,7 +13,7 @@ use Inertia\Response;
 class StudentController extends Controller {
 
     public function list(): Response {
-        $user = User::paginate(10);
+        $user = User::where(['type' => User::student])->paginate(10);
 
         return Inertia::render('Student/List', [
             'users' => $user,
