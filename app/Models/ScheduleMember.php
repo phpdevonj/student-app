@@ -16,4 +16,8 @@ class ScheduleMember extends Model {
         return $this->hasOne(Schedule::class, 'id', 'schedule_id');
     }
 
+    public function getUser() {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
 }

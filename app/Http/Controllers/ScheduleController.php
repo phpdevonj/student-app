@@ -88,4 +88,16 @@ class ScheduleController extends Controller {
         return redirect()->route('schedules')->with('status', $status);
     }
 
+    public function view(Request $request, $id): Response {
+        $schedule = Schedule::with('getScheduleMembers.getUser')->find($id);
+        return Inertia::render('Schedule/View', [
+            'schedule' => $schedule,
+        ]);
+    }
+
+    public function rating(Request $request, $id, $user_id) {
+        $request->validate(['rating' => 'required|numeric|min:1|max:10']);
+        ScheduleMember::where(['schedule_id' => $id, 'user_id' => $user_id])->update(['rating' => $request->rating]);
+    }
+
 }

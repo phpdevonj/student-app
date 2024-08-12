@@ -49,6 +49,8 @@ Route::middleware('auth')->group(function () {
     // Schedules
     Route::get('/schedules', [ScheduleController::class, 'list'])->name('schedules');
     Route::post('/schedule', [ScheduleController::class, 'store'])->name('schedule.store');
+    Route::get('/schedule/{id}', [ScheduleController::class, 'view'])->name('schedule.view');
+    Route::post('/schedule-rating/{id}/{user_id}', [ScheduleController::class, 'rating'])->name('schedule.rating');
 });
 
 require __DIR__ . '/auth.php';

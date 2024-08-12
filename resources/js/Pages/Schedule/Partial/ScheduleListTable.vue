@@ -1,11 +1,21 @@
 <script setup>
 
-
 import Pagination from "@/Components/Pagination.vue";
+import {Link} from "@inertiajs/vue3";
 
 const props = defineProps({
     schedules: Object,
 });
+
+const visible = (endDate) => {
+    const dateTime = new Date(endDate)
+    const now = new Date();
+    const diffInMilliseconds = now - dateTime;
+    const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
+    return diffInMinutes > 10;
+}
+
+
 </script>
 
 <template>
@@ -27,6 +37,9 @@ const props = defineProps({
                     <th scope="col" class="px-6 py-3">
                         Schedule End Time
                     </th>
+                    <th scope="col" class="px-6 py-3">
+                        Ratings
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -40,6 +53,15 @@ const props = defineProps({
                     </td>
                     <td class="px-6 py-4">
                         {{ schedule.end_date_time }}
+                    </td>
+                    <td class="px-6 py-4">
+                        <Link
+                            v-if="visible(schedule.end_date_time)"
+                            :href="route('schedule.view', [schedule.id])"
+                            class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
+                        >View
+                        </Link
+                        >
                     </td>
                 </tr>
                 </tbody>
