@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable {
 
+    const admin = 1;
     const student = 0;
 
     use HasApiTokens, HasFactory, Notifiable;
@@ -25,6 +26,7 @@ class User extends Authenticatable {
         'last_name',
         'email',
         'password',
+        'type'
     ];
 
     /**
