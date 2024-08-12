@@ -39,48 +39,79 @@ class ReportTemplateController extends Controller
     {
 
         // Load the DOCX file
-        $phpWord = IOFactory::load($filePath);
+        try {
+            \PhpOffice\PhpWord\Settings::setOutputEscapingEnabled(true);
+            $phpWord = IOFactory::load($filePath);
+        } catch (\Exception $e) {
+            echo "Error loading DOCX file: " . $e->getMessage();
+            exit;
+        }
+        $phpWord->getSettings()->setEvenAndOddHeaders(false);
 
         foreach ($phpWord->getSections() as $section) {
             foreach ($section->getElements() as $element) {
+
+                // get only table data
                 if ($element instanceof \PhpOffice\PhpWord\Element\Table) {
                     $reportData = [];
                     $rows = $element->getRows();
                     foreach ($element->getRows() as $index => $row) {
-                        if(count($row->getCells()) >= 2){
-                            $cells = $row->getCells();
-                            // dd(trim($cells[0]->getElements()[0]->getText()) == 'Subject name');
-                            if (trim($cells[0]->getElements()[0]->getText()) == 'Subject name') {
-                                $reportData['subject_name'] = trim($cells[1]->getElements()[0]->getText());
-                            }
-                        }
-
-                        $upper = '';
                         if ($index > 1) {
-                            $upper = $rows[$index - 1]->getCells()[0]->getElements()[0]->getText();
-                            if($upper == 'Session start date') {
+
+                            if(count($row->getCells()) == 5){
+                                $cell = $row->getCells();
+                                $reportData['subject_name'] = $cell[0]->getElements()[0]->getText();
+                                $reportData['start_date'] = $cell[2]->getElements()[0]->getText();
+                                $reportData['end_date'] = $cell[3]->getElements()[0]->getText();
+                                $reportData['improvement_target'] = $cell[4]->getElements()[0]->getText();
+                            }
+
+                            if(count($row->getCells()) == 4){
+                                $cell = $row->getCells();
+                                $reportData['subject_name'] = $cell[0]->getElements()[0]->getText();
+                                $date = explode(' to ', $cell[2]->getElements()[0]->getText());
+                                $reportData['start_date'] = $date[0];
+                                $reportData['end_date'] = $date[1];
+                                preg_match('/\d+/', $cell[3]->getElements()[0]->getText(), $target);
+                                $reportData['improvement_target'] = $target[0];
+                            }
+
+                            if(count($row->getCells()) >= 2){
+                                $cells = $rows[$index - 1]->getCells();
+
+                                if (trim($cells[0]->getElements()[0]->getText()) == 'Subject name') {
+                                    $reportData['subject_name'] = $rows[$index]->getCells()[0]->getElements()[0]->getText();
+                                }
+                            }
+                            $upperRow = '';
+                            $upperRow = $rows[$index - 1]->getCells()[0]->getElements()[0]->getText();
+                            if($upperRow == 'Session start date' || $upperRow == 'Start Date') {
                                 $reportData['start_date'] = $rows[$index]->getCells()[0]->getElements()[0]->getText();
                             }
-                            if($upper == 'Session end date') {
+                            if($upperRow == 'Session end date' || $upperRow == 'End Date') {
                                 $reportData['end_date'] = $rows[$index]->getCells()[0]->getElements()[0]->getText();
                             }
-                            if($upper == 'Improvement target') {
+                            if($upperRow == 'Improvement target' || $upperRow == 'target') {
                                 $reportData['improvement_target'] = $rows[$index]->getCells()[0]->getElements()[0]->getText();
                             }
                         }
 
-                    }
-                    if(!empty($reportData)){
-                        $report = new Report;
-                        $report->subject_name = $reportData['subject_name'] ;
-                        $report->start_date = $reportData['start_date'] ;
-                        $report->end_date = $reportData['end_date'] ;
-                        $report->improvement_target = $reportData['improvement_target'] ;
-                        $report->created_at = now();
-                        $report->updated_at = now() ;
-                        $report->save();
-                    }
+                        // validate if all required fields have values
+                        $missingFields = array_diff(['subject_name', 'start_date', 'end_date', 'improvement_target'], array_keys($reportData));
+                        if (empty($missingFields) && !in_array(null, $reportData)) {
+                            $report = new Report;
+                            $report->subject_name = $reportData['subject_name'] ;
+                            $report->start_date = $reportData['start_date'] ;
+                            $report->end_date = $reportData['end_date'] ;
+                            $report->improvement_target = $reportData['improvement_target'] ;
+                            $report->created_at = now();
+                            $report->updated_at = now() ;
+                            $report->save();
 
+                            // empty reportData for next collection
+                            $reportData = [];
+                        }
+                    }
                 }
             }
         }
