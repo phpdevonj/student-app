@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->id('report_id');
             $table->string('subject_name');
-            $table->date('start_date');
-            $table->date('end_date');
+            $table->string('start_date');
+            $table->string('end_date');
             $table->string('improvement_target');
             $table->timestamps();
         });

@@ -25,10 +25,6 @@ class ReportTemplateController extends Controller
 
     public function uploadFile(Request $request)
     {
-        // $request->validate([
-        //     'file' => 'required|mimes:xlsx,xls,csv,docx',
-        // ]);
-
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $path = $file->store('uploads');
@@ -44,58 +40,51 @@ class ReportTemplateController extends Controller
 
         // Load the DOCX file
         $phpWord = IOFactory::load($filePath);
-        // Iterate through sections
 
-        $reportRow = [];
         foreach ($phpWord->getSections() as $section) {
             foreach ($section->getElements() as $element) {
                 if ($element instanceof \PhpOffice\PhpWord\Element\Table) {
+                    $reportData = [];
                     $rows = $element->getRows();
                     foreach ($element->getRows() as $index => $row) {
-                        if ($index > 1) {
-                            $rows[$index - 1]->getElements()[0]->getText() = '';
-                        }
                         if(count($row->getCells()) >= 2){
                             $cells = $row->getCells();
                             // dd(trim($cells[0]->getElements()[0]->getText()) == 'Subject name');
                             if (trim($cells[0]->getElements()[0]->getText()) == 'Subject name') {
-                                $subjectName = trim($cells[1]->getElements()[0]->getText());
-                                echo 'subject Name - '. $subjectName.'<br>';
+                                $reportData['subject_name'] = trim($cells[1]->getElements()[0]->getText());
                             }
                         }
 
-                        echo '<br>';
-                    }
-                }
-            }
-            dd($phpWord->getSections());
-
-            // Get header content (if any)
-            $headers = $section->getHeaders();
-            foreach ($headers as $header) {
-                // Extract text elements from the header
-                foreach ($header->getElements() as $element) {
-                    if (method_exists($element, 'getText')) {
-                        echo 'Header Text: ' . $element->getText() . PHP_EOL;
-                    }
-                }
-            }
-
-            // Get the main body content
-            foreach ($section->getElements() as $element) {
-                if ($element instanceof \PhpOffice\PhpWord\Element\Table) {
-                    foreach ($element->getRows() as $row) {
-                        foreach ($row->getCells() as $cell) {
-                            echo 'Cell Text: ' . $cell->getText() . PHP_EOL;
+                        $upper = '';
+                        if ($index > 1) {
+                            $upper = $rows[$index - 1]->getCells()[0]->getElements()[0]->getText();
+                            if($upper == 'Session start date') {
+                                $reportData['start_date'] = $rows[$index]->getCells()[0]->getElements()[0]->getText();
+                            }
+                            if($upper == 'Session end date') {
+                                $reportData['end_date'] = $rows[$index]->getCells()[0]->getElements()[0]->getText();
+                            }
+                            if($upper == 'Improvement target') {
+                                $reportData['improvement_target'] = $rows[$index]->getCells()[0]->getElements()[0]->getText();
+                            }
                         }
+
                     }
+                    if(!empty($reportData)){
+                        $report = new Report;
+                        $report->subject_name = $reportData['subject_name'] ;
+                        $report->start_date = $reportData['start_date'] ;
+                        $report->end_date = $reportData['end_date'] ;
+                        $report->improvement_target = $reportData['improvement_target'] ;
+                        $report->created_at = now();
+                        $report->updated_at = now() ;
+                        $report->save();
+                    }
+
                 }
             }
         }
-        dd('$spreadsheet');
-        $sheet = $spreadsheet->getActiveSheet();
-        $data = $sheet->toArray();
-        return $data;
+        return true;
     }
 
 
