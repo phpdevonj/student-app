@@ -17,7 +17,7 @@ class ScheduleController extends Controller {
     public function list(): Response {
         $schedules = Schedule::paginate(10);
 
-        $students = User::all();
+        $students = User::where('type', 0)->get();
 
         return Inertia::render('Schedule/Index', [
             'schedules' => $schedules,
