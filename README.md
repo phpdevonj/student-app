@@ -11,8 +11,8 @@
 
 - Run `docker compose up`
 - Setup database in docker/.env.example if not using docker then use root .env file
-- Run `php artisan migrate`
-- Run `npm install`
+- Run `php artisan migrate` inside php container if you use docker.
+- Run `npm install`, run this on local system. must have node version 20^ install
 - Add current app url to .env file `APP_URL=`
 - Run `npm run dev`
 
