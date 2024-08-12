@@ -33,7 +33,7 @@ const showingNavigationDropdown = ref(false);
                                     Dashboard
                                 </NavLink>
                                 <NavLink v-if="$page.props.auth.user.type == 1" :href="route('student')" :active="route().current('student')">
-                                    Student
+                                    Students
                                 </NavLink>
                                 <NavLink v-if="$page.props.auth.user.type == 0" :href="route('availability')" :active="route().current('availability')">
                                     Availability
@@ -42,7 +42,7 @@ const showingNavigationDropdown = ref(false);
                                     Schedules
                                 </NavLink>
                                 <NavLink :href="route('report.index')" :active="route().current('report')">
-                                    Reports
+                                    Uploads
                                 </NavLink>
                             </div>
                         </div>

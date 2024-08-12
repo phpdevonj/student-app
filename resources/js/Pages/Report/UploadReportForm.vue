@@ -31,7 +31,7 @@ const submit = () => {
 <template>
     <section>
         <header class="my-4">
-            <h2 class="text-lg font-medium text-gray-900">Import Reports</h2>
+            <h2 class="text-lg font-medium text-gray-900">Import Sample Docx</h2>
         </header>
 
         <form @submit.prevent="submit" enctype="multipart/form-data">

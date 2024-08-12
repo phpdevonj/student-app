@@ -12,7 +12,7 @@ console.log(props);
 <template>
     <section class="max-w-full">
         <header class="my-4">
-            <h2 class="text-lg font-medium text-gray-900">All Reports</h2>
+            <h2 class="text-lg font-medium text-gray-900">All Data</h2>
         </header>
 
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg ">
@@ -23,10 +23,10 @@ console.log(props);
                         Subject
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Report Start Date
+                        Start Date
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Report End Date
+                        End Date
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Improvement Targets
